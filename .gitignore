@@ -65,6 +65,11 @@ writable/debugbar/*
 
 php_errors.log
 
+#at to neni kotuc furt
+app/Config/App.php
+app/Config/Database.php
+
+
 #-------------------------
 # User Guide Temp Files
 #-------------------------
