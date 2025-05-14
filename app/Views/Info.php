@@ -11,7 +11,7 @@
                         <h5 class="card-title"><?= esc($race->default_name) ?></h5>
                         <p class="card-text"><strong>Země:</strong> <?= esc($race->country ?? '-') ?></p>
                         <p class="card-text"><strong>Typ:</strong> <?= esc($race->type ?? '-') ?></p>
-                        <a href="<?= base_url("Info/".$race->id) ?>" class="btn btn-primary" target="_blank">Tož bližší info ne</a>
+                        <a href="<?= base_url("Info") ?>" class="btn btn-primary" target="_blank">Tož bližší info ne</a>
                     </div>
                 </div>
             </div>

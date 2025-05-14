@@ -22,4 +22,10 @@ class Main extends BaseController
     
         echo view("index", $data);
     }
+
+    public function info($id)
+    {
+        
+        
+    }
 }
