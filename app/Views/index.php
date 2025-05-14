@@ -2,21 +2,23 @@
 <?= $this->section('content'); ?>
 <h1>cau</h1>
 
-<div class="row mt-5">
-    <?php
-    foreach ($typkomponent as $row) {
-        ?>
-        <div class="card col-4 me-5 mb-3">
-            <div class="card-body">
-                <?php
-                    echo "<h3>".anchor("komponent/".$row->url, $row->typKomponent)."</h3>";
-               
-                ?>
+<div class="container mt-4">
+    <h1 class="mb-4">Závody</h1>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <?php foreach ($races as $race): ?>
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title"><?= esc($race->default_name) ?></h5>
+                        <p class="card-text"><strong>Země:</strong> <?= esc($race->country ?? '-') ?></p>
+                        <p class="card-text"><strong>Typ:</strong> <?= esc($race->type ?? '-') ?></p>
+                        <a href="<?= esc($race->link) ?>" class="btn btn-primary" target="_blank">Detail</a>
+                    </div>
+                </div>
             </div>
-        </div>
-        <?php
-    }
-?>
+        <?php endforeach; ?>
+    </div>
+</div>
 
 <?= $this->endSection(); ?>
 

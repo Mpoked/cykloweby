@@ -4,19 +4,22 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
+use App\Models\Race;
 
 class Main extends BaseController
 {
+    var $race;
     public function __construct()
     {
-        $this->typkomponent = new typkomponent();
-        $this->komponent = new komponent();
+        $this->race = new race();
+        
     }
 
     public function index()
     {
-        $index = $this->race->findAll();
-        $data['race'] = $index;
+        $races = $this->race->findAll(); // Vrací pole objektů
+        $data['races'] = $races;
+    
         echo view("index", $data);
     }
 }
