@@ -1,9 +1,8 @@
 <?= $this->extend('layout/template'); ?>
 <?= $this->section('content'); ?>
-<h1>cau</h1>
+<h1 class="mb-4 text-center">Závody</h1>
 
 <div class="container mt-4">
-    <h1 class="mb-4">Závody</h1>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <?php foreach ($races as $race): ?>
             <div class="col">
@@ -12,7 +11,7 @@
                         <h5 class="card-title"><?= esc($race->default_name) ?></h5>
                         <p class="card-text"><strong>Země:</strong> <?= esc($race->country ?? '-') ?></p>
                         <p class="card-text"><strong>Typ:</strong> <?= esc($race->type ?? '-') ?></p>
-                        <a href="<?= esc($race->link) ?>" class="btn btn-primary" target="_blank">Detail</a>
+                        <a href="<?= esc($race->link) ?>" class="btn btn-primary" target="_blank">Tož bližší info ne</a>
                     </div>
                 </div>
             </div>
