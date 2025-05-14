@@ -3,24 +3,29 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\Race;
 
 class Main extends BaseController
 {
-    var $race;
+    protected $race;
+
     public function __construct()
     {
-        $this->race = new race();
-        
+        $this->race = new Race();
     }
 
     public function index()
     {
-        $races = $this->race->findAll(); // Vrací pole objektů
-        $data['races'] = $races;
-    
-        echo view("index", $data);
+        // Počet záznamů na stránku
+
+        // Načti závody s použitím paginace
+        $data['races'] = $this->race->paginate(15);
+
+        // Přidej pager do dat
+        $data['pager'] = $this->race->pager;
+
+        // Zobraz view
+        echo view('index', $data);
     }
 
     public function info($id)

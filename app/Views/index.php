@@ -18,6 +18,7 @@
         <?php endforeach; ?>
     </div>
 </div>
+<?= $pager->links() ?>
 
 <?= $this->endSection(); ?>
 

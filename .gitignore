@@ -92,6 +92,7 @@ phpunit
 vendor/
 node_modules/
 
+
 #-------------------------
 # IDE / Development Files
 #-------------------------
