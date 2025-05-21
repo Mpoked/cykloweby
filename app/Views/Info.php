@@ -25,6 +25,7 @@
                         <p class="card-text"><strong>Začátek:</strong> <?= esc($zacatek_zavodu ?? '-') ?></p>
                         <p class="card-text"><strong>Konec:</strong> <?= esc($konec_zavodu ?? '-') ?></p>
                         <p class="card-text"><strong>Druh UCI:</strong> <?= esc($zavod->name ?? '-') ?></p>
+                        <p class="card-text"><strong>pocet etap:</strong> <?= esc($zavod->pocet ?? '-') ?></p>
                         <a href="<?= base_url("stages/".$zavod->id) ?>" class="btn btn-primary" target="">Etapy</a>
                     </div>
                 </div>
