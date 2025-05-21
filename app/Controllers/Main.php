@@ -4,14 +4,17 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\Race;
+use App\Models\RaceYear;
 
 class Main extends BaseController
 {
     protected $race;
+    protected $race_year;
 
     public function __construct()
     {
         $this->race = new Race();
+        $this->race_year = new RaceYear();
     }
 
     public function index()
@@ -30,6 +33,10 @@ class Main extends BaseController
 
     public function info($id)
     {
+        $zavody = $this->race_year->where("id_race", $id)->findAll();
+        $data["zavody"] = $zavody;
+
+        echo view("Info", $data);
         
         
     }
