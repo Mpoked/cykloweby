@@ -31,10 +31,21 @@ class Main extends BaseController
 
     public function info($id)
     {
-        // Zobrazí ročníky daného závodu
-        $zavody = $this->race_year->where("id_race", $id)->findAll();
+        $zavody = $this->race_year
+            ->select('race_year.*, cyklo_race.default_name as race_name, COUNT(cyklo_stage.id) as stage_count')
+            ->where('race_year.id_race', $id)
+            ->join('cyklo_race', 'cyklo_race.id = race_year.id_race', 'left')
+            ->join('cyklo_stage', 'cyklo_stage.id_race_year = race_year.id', 'left')
+            ->groupBy('race_year.id')
+            ->findAll();
+    
+        // Převedeme stage_count na integer u objektů
+        foreach ($zavody as $zavod) {
+            $zavod->stage_count = (int)$zavod->stage_count;
+        }
+    
         $data["zavody"] = $zavody;
-
+    
         echo view("info", $data);
     }
 
