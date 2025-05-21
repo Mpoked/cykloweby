@@ -21,6 +21,7 @@
                         <p class="card-text"><strong>Ročník:</strong> <?= esc($zavod->year ?? '-') ?></p>
                         <p class="card-text"><strong>Začátek:</strong> <?= esc($zacatek_zavodu ?? '-') ?></p>
                         <p class="card-text"><strong>Konec:</strong> <?= esc($konec_zavodu ?? '-') ?></p>
+                        <a href="<?= base_url("stages/".$zavod->id) ?>" class="btn btn-primary" target="">Etapy</a>
                     </div>
                 </div>
             </div>
