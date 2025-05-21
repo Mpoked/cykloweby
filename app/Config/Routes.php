@@ -7,3 +7,5 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Main::index');
 $routes->get('Info/(:num)', 'Main::info/$1');
+$routes->get('stages/(:num)', 'Main::stages/$1');
+
