@@ -18,7 +18,10 @@
         <?php endforeach; ?>
     </div>
 </div>
-<?= $pager->links() ?>
+<div class="justify-content-center p-5">
+<?= $pager->links(); ?>
+</div>
+</div>
 
 <?= $this->endSection(); ?>
 
