@@ -46,14 +46,29 @@ class Main extends BaseController
 
     public function stages($raceYearId)
     {
-        // Načti etapy podle ID ročníku závodu
         $stages = $this->stage
             ->where('id_race_year', $raceYearId)
             ->orderBy('number', 'ASC')
             ->findAll();
-
+    
+        // Mapování ID na název typu etapy
+        $typeMap = [
+            1 => 'Rovina',
+            2 => 'Kopce, dojezd rovina',
+            3 => 'Kopce, dojezd do kopce',
+            4 => 'Hory, dojezd rovina',
+            5 => 'Hory, dojezd do kopce',
+            6 => 'Neznámý'
+        ];
+    
+        // Přidáme název typu k etapám
+        foreach ($stages as &$stage) {
+            $id = (int)$stage['parcour_type'];
+            $stage['parcour_type_text'] = $typeMap[$id] ?? 'Neznámý';
+        }
+    
         $data['stages'] = $stages;
-
+    
         echo view("stages", $data);
-    }
+}
 }
