@@ -4,6 +4,8 @@
 
 <div class="container mt-4">
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+       
         <?php foreach ($zavody as $zavod): 
             $zacatek_zavodu = strtotime($zavod->start_date);
             $zacatek_zavodu = date("j.n.Y", $zacatek_zavodu);
@@ -22,6 +24,7 @@
                         <p class="card-text"><strong>Ročník:</strong> <?= esc($zavod->year ?? '-') ?></p>
                         <p class="card-text"><strong>Začátek:</strong> <?= esc($zacatek_zavodu ?? '-') ?></p>
                         <p class="card-text"><strong>Konec:</strong> <?= esc($konec_zavodu ?? '-') ?></p>
+                        <p class="card-text"><strong>Druh UCI:</strong> <?= esc($zavod->name ?? '-') ?></p>
                         <a href="<?= base_url("stages/".$zavod->id) ?>" class="btn btn-primary" target="">Etapy</a>
                     </div>
                 </div>

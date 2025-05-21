@@ -6,18 +6,21 @@ use App\Controllers\BaseController;
 use App\Models\Race;
 use App\Models\RaceYear;
 use App\Models\Stage;
+use App\Models\UciTourType;
 
 class Main extends BaseController
 {
     protected $race;
     protected $race_year;
     protected $stage;
+    protected $uci_tour_type;
 
     public function __construct()
     {
         $this->race = new Race();
         $this->race_year = new RaceYear();
         $this->stage = new Stage();
+        $this->uci_tour_type = new UciTourType();
     }
 
     public function index()
@@ -32,8 +35,11 @@ class Main extends BaseController
     public function info($id)
     {
         // Zobrazí ročníky daného závodu
-        $zavody = $this->race_year->where("id_race", $id)->findAll();
+        $zavody = $this->race_year->join("uci_tour_type", "uci_tour_type.id = race_year.uci_tour", "inner")->where("id_race", $id)->findAll();
         $data["zavody"] = $zavody;
+
+        
+        
 
         echo view("info", $data);
     }
