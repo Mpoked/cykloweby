@@ -16,6 +16,7 @@
                 <div class="card h-100 shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title"><?= esc($zavod->real_name) ?></h5>
+                        <span class="fi fi-<?= esc($zavod->country) ?> "></span> 
                         <p class="card-text"><strong>Země:</strong> <?= esc($zavod->country ?? '-') ?></p>
                         <p class="card-text"><strong>Ročník:</strong> <?= esc($zavod->year ?? '-') ?></p>
                         <p class="card-text"><strong>Začátek:</strong> <?= esc($zacatek_zavodu ?? '-') ?></p>
