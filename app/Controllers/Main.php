@@ -32,44 +32,28 @@ class Main extends BaseController
         echo view('index', $data);
     }
 
-    public function info($id)
-    {
-        $zavody = $this->race_year->select('Count(*) as pocet, race_year.*, uci_tour_type.*')
-        ->join("uci_tour_type", "uci_tour_type.id = race_year.uci_tour", "inner")
-        ->join("stage", "race_year.id=stage.id_race_year")->where("id_race", $id)->groupBy("id_race_year")->findAll();
-        $data["zavody"] = $zavody;
+ public function info($id)
+{
+    $zavody = $this->race_year->select('race_year.*, uci_tour_type.name, COUNT(stage.id) as pocet')
+        ->join("uci_tour_type", "uci_tour_type.id = race_year.uci_tour", "left")
+        ->join("stage", "race_year.id = stage.id_race_year", "left")
+        ->where("id_race", $id)
+        ->groupBy("race_year.id")  // Upřesnění GROUP BY
+        ->findAll();
+    
+    $data["zavody"] = $zavody;
+    echo view("info", $data);
+}
 
-        
-        
+public function stages($raceYearId)
+{
+    $stages = $this->stage->select('stage.*, uci_tour_type.name as parcour_type_text')
+        ->join('uci_tour_type', 'uci_tour_type.id = stage.parcour_type', 'left')
+        ->where('id_race_year', $raceYearId)
+        ->orderBy('number', 'ASC')
+        ->findAll();
 
-        echo view("info", $data);
-    }
-
-    public function stages($raceYearId)
-    {
-        $stages = $this->stage
-            ->where('id_race_year', $raceYearId)
-            ->orderBy('number', 'ASC')
-            ->findAll();
-    
-        // Mapování ID na název typu etapy
-        $typeMap = [
-            1 => 'Rovina',
-            2 => 'Kopce, dojezd rovina',
-            3 => 'Kopce, dojezd do kopce',
-            4 => 'Hory, dojezd rovina',
-            5 => 'Hory, dojezd do kopce',
-            6 => 'Neznámý'
-        ];
-    
-        // Přidáme název typu k etapám
-        foreach ($stages as &$stage) {
-            $id = (int)$stage['parcour_type'];
-            $stage['parcour_type_text'] = $typeMap[$id] ?? 'Neznámý';
-        }
-    
-        $data['stages'] = $stages;
-    
-        echo view("stages", $data);
+    $data['stages'] = $stages;
+    echo view("stages", $data);
 }
 }
