@@ -1,6 +1,12 @@
 <?= $this->extend('layout/template'); ?>
 <?= $this->section('content'); ?>
-<h1 class="mb-4 text-center">Závody</h1>
+<div class=" justify-content-between align-items-center mb-4">
+    <h1>Ročníky závodu</h1>
+    <a href="<?= base_url('zavod/pridej_rocnik/' . $id_zavodu) ?>" class="btn btn-success">
+        <i class="bi bi-plus-lg"></i> Přidat ročník
+    </a>
+
+
 
 <div class="container mt-4">
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
@@ -25,14 +31,16 @@
                         <p class="card-text"><strong>Začátek:</strong> <?= esc($zacatek_zavodu ?? '-') ?></p>
                         <p class="card-text"><strong>Konec:</strong> <?= esc($konec_zavodu ?? '-') ?></p>
                         <p class="card-text"><strong>Druh UCI:</strong> <?= esc($zavod->name ?? '-') ?></p>
-                        <p class="card-text"><strong>pocet etap:</strong> <?= esc($zavod->pocet ?? '-') ?></p>
+                        <p class="card-text"><strong>Počet etap:</strong> <?= esc($zavod->pocet ?? '-') ?></p>
                         <a href="<?= base_url("stages/".$zavod->id) ?>" class="btn btn-primary" target="">Etapy</a>
                     </div>
                 </div>
             </div>
         <?php endforeach; ?>
     </div>
+    </div>
 </div>
+
 
 <?= $this->endSection(); ?>
 
