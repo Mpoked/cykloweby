@@ -70,40 +70,74 @@ public function pridej_rocnik_form($id_zavodu)
 
 public function pridej_rocnik()
 {
-    $validace = \Config\Services::validation();
-    $validace->setRules([
+    // Validace vstupů bez `after_or_equal`
+    $validace = $this->validate([
         'id_zavodu' => 'required|numeric',
         'real_name' => 'required|max_length[255]',
         'year' => 'required|numeric|min_length[4]|max_length[4]',
         'start_date' => 'required|valid_date',
         'end_date' => 'required|valid_date',
-        'country' => 'required|max_length[2]',
+        'country' => 'required|max_length[2]|alpha',
         'uci_tour' => 'required|numeric',
-        'logo' => 'uploaded[logo]|max_size[logo,2048]|is_image[logo]'
+        'logo' => 'max_size[logo,2048]|is_image[logo]' // Logo je nepovinné
     ]);
 
-    if (!$validace->withRequest($this->request)->run()) {
-        return redirect()->back()->withInput()->with('errors', $validace->getErrors());
+    if (!$validace) {
+        return redirect()->back()
+            ->withInput()
+            ->with('errors', $this->validator->getErrors());
     }
 
-    $logo = $this->request->getFile('logo');
-    $noveJmeno = $logo->getRandomName();
-    $logo->move(ROOTPATH . 'public/obrazky/logo', $noveJmeno);
+    // Ruční kontrola, že end_date není před start_date
+    $start = strtotime($this->request->getPost('start_date'));
+    $end = strtotime($this->request->getPost('end_date'));
 
+    if ($end < $start) {
+        return redirect()->back()
+            ->withInput()
+            ->with('errors', ['end_date' => 'Datum konce musí být stejné nebo pozdější než datum začátku.']);
+    }
+
+    // Zpracování obrázku
+    $logo = $this->request->getFile('logo');
+    $noveJmeno = null;
+
+    if ($logo && $logo->isValid() && !$logo->hasMoved()) {
+        $noveJmeno = $logo->getRandomName();
+        $logo->move(ROOTPATH . 'obrazky/logo', $noveJmeno);
+
+        if (!$logo->hasMoved()) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Nepodařilo se uložit logo.');
+        }
+    }
+
+    // Příprava dat
     $data = [
         'id_race' => $this->request->getPost('id_zavodu'),
         'real_name' => $this->request->getPost('real_name'),
         'year' => $this->request->getPost('year'),
         'start_date' => $this->request->getPost('start_date'),
         'end_date' => $this->request->getPost('end_date'),
-        'country' => strtolower($this->request->getPost('country')),
+        'country' => strtoupper($this->request->getPost('country')),
         'uci_tour' => $this->request->getPost('uci_tour'),
         'logo' => $noveJmeno
     ];
 
-    $this->race_year->insert($data);
+    try {
+        $this->race_year->insert($data);
+    } catch (\Exception $e) {
+        if ($noveJmeno && file_exists(ROOTPATH . 'obrazky/logo/' . $noveJmeno)) {
+            unlink(ROOTPATH . 'obrazky/logo/' . $noveJmeno);
+        }
+
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Chyba při ukládání do databáze: ' . $e->getMessage());
+    }
 
     return redirect()->to('/zavod/info/' . $this->request->getPost('id_zavodu'))
-        ->with('zprava', 'Ročník byl úspěšně přidán');
+        ->with('uspech', 'Ročník byl úspěšně přidán');
 }
 }
