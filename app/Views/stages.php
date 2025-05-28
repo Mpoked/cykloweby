@@ -26,7 +26,7 @@
                             <td><?= esc($stage['departure']) ?></td>
                             <td><?= esc($stage['arrival']) ?></td>
                             <td><?= number_format($stage['distance'], 1) ?> km</td>
-                            <td><?= esc($stage['parcour_type_text']) ?></td>
+                            <td><?= esc($stage['parcour_type']) ?></td>
                             <td><?= esc($stage['vertical_meters']) ?> m</td>
                         </tr>
                     <?php endforeach; ?>
