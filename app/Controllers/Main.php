@@ -32,20 +32,20 @@ class Main extends BaseController
         echo view('index', $data);
     }
 
-public function info($id)
-{
-    $data = [
-        'zavody' => $this->race_year->select('race_year.*, uci_tour_type.name, COUNT(stage.id) as pocet')
-            ->join("uci_tour_type", "uci_tour_type.id = race_year.uci_tour", "left")
-            ->join("stage", "race_year.id = stage.id_race_year", "left")
-            ->where("id_race", $id)
-            ->groupBy("race_year.id")
-            ->findAll(),
-        'id_zavodu' => $id
-    ];
-    
-    echo view("info", $data);
-}
+    public function info($id)
+    {
+        $data = [
+            'zavody' => $this->race_year->select('race_year.*, uci_tour_type.name, COUNT(*) as pocet')
+                ->join("uci_tour_type", "uci_tour_type.id = race_year.uci_tour", "left")
+                ->join("stage", "race_year.id = stage.id_race_year", "left")
+                ->where("id_race", $id)
+                ->groupBy("race_year.id")
+                ->findAll(),
+            'id_zavodu' => $id
+        ];
+        
+        echo view("info", $data);
+    }
 
 public function stages($raceYearId)
 {
