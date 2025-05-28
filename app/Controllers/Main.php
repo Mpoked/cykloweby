@@ -47,17 +47,18 @@ class Main extends BaseController
         echo view("info", $data);
     }
 
-public function stages($raceYearId)
-{
-    $stages = $this->stage->select('stage.*, uci_tour_type.name as parcour_type_text')
-        ->join('uci_tour_type', 'uci_tour_type.id = stage.parcour_type', 'left')->join("parcour_type", "stage.parcour_type = parcour_type.id", "inner")
-        ->where('id_race_year', $raceYearId)
-        ->orderBy('number', 'ASC')
-        ->findAll();
+    public function stages($raceYearId)
+    {
+        $stages = $this->stage->select('stage.*, cyklo_parcour_type.name as parcour_type_text')
+            ->join('cyklo_parcour_type', 'cyklo_parcour_type.id = stage.parcour_type', 'left')
+            ->where('id_race_year', $raceYearId)
+            ->orderBy('number', 'ASC')
+            ->findAll();
+    
+        $data['stages'] = $stages;
+        echo view("stages", $data);
+    }
 
-    $data['stages'] = $stages;
-    echo view("stages", $data);
-}
 public function pridej_rocnik_form($id_zavodu)
 {
     $data = [
