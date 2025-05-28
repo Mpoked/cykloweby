@@ -19,23 +19,23 @@
                         </div>
 
                         <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="rok" class="form-label">Ročník</label>
-                                    <select class="form-select" id="rok" name="year" required>
-                                        <?php 
-                                        $currentYear = date('Y');
-                                        $startYear = 1900;
-                                        $endYear = $currentYear;
-                                        
-                                        for ($year = $endYear; $year >= $startYear; $year--) {
-                                            $selected = ($year == $currentYear) ? 'selected' : '';
-                                            echo "<option value=\"$year\" $selected>$year</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
+                        <div class="col-md-6">
+    <div class="mb-3">
+        <label for="rok" class="form-label">Ročník</label>
+        <select class="form-select" id="rok" name="year" required>
+            <option value="" disabled selected>-- Vyberte ročník --</option>
+            <?php 
+            $currentYear = date('Y');
+            $startYear = 1900;
+            $endYear = $currentYear;
+            
+            for ($year = $endYear; $year >= $startYear; $year--) {
+                echo "<option value=\"$year\">$year</option>";
+            }
+            ?>
+        </select>
+    </div>
+</div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="zeme" class="form-label">Země</label>
