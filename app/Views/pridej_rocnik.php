@@ -10,16 +10,6 @@
                 </div>
                 
                 <div class="card-body">
-                    <?php if (session()->has('errors')): ?>
-                        <div class="alert alert-danger">
-                            <ul class="mb-0">
-                                <?php foreach (session('errors') as $error): ?>
-                                    <li><?= $error ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    <?php endif; ?>
-
                     <form action="<?= base_url('zavod/pridej_rocnik') ?>" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="id_zavodu" value="<?= $id_zavodu ?>">
 
@@ -32,13 +22,52 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="rok" class="form-label">Ročník</label>
-                                    <input type="number" class="form-control" id="rok" name="year" min="1900" max="2100" required>
+                                    <select class="form-select" id="rok" name="year" required>
+                                        <?php 
+                                        $currentYear = date('Y');
+                                        $startYear = 1900;
+                                        $endYear = $currentYear;
+                                        
+                                        for ($year = $endYear; $year >= $startYear; $year--) {
+                                            $selected = ($year == $currentYear) ? 'selected' : '';
+                                            echo "<option value=\"$year\" $selected>$year</option>";
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="zeme" class="form-label">Země (CZ, FR...)</label>
-                                    <input type="text" class="form-control text-uppercase" id="zeme" name="country" maxlength="2" required>
+                                    <label for="zeme" class="form-label">Země</label>
+                                    <select class="form-select" id="zeme" name="country" required>
+                                        <option value="" disabled selected>-- Vyberte zemi --</option>
+                                        <?php 
+                                        // Get unique country codes from cyklo_race table
+                                        $db = \Config\Database::connect();
+                                        $countries = $db->table('cyklo_race')
+                                                      ->select('country')
+                                                      ->distinct()
+                                                      ->where('country IS NOT NULL')
+                                                      ->where("country != ''")
+                                                      ->orderBy('country', 'ASC')
+                                                      ->get()
+                                                      ->getResultArray();
+                                        
+                                        // Simple country code to name mapping
+                                        $countryNames = [
+                                            'au' => 'Austrálie',
+                                            'nz' => 'Nový Zéland',
+                                            've' => 'Venezuela',
+                                            // Add more mappings as needed
+                                        ];
+                                        
+                                        foreach ($countries as $country): 
+                                            $code = strtolower($country['country']);
+                                            $name = $countryNames[$code] ?? strtoupper($code);
+                                        ?>
+                                            <option value="<?= strtoupper($code) ?>"><?= $name ?> (<?= strtoupper($code) ?>)</option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -61,7 +90,7 @@
                         <div class="mb-3">
                             <label for="kategorie" class="form-label">Kategorie</label>
                             <select class="form-select" id="kategorie" name="uci_tour" required>
-                                <option value="">-- Vyberte kategorii --</option>
+                                <option value="" disabled selected>-- Vyberte kategorii --</option>
                                 <?php foreach ($kategorie as $kat): ?>
                                     <option value="<?= $kat['id'] ?>"><?= esc($kat['name']) ?></option>
                                 <?php endforeach; ?>
@@ -70,7 +99,7 @@
 
                         <div class="mb-3">
                             <label for="logo" class="form-label">Logo závodu</label>
-                            <input type="file" class="form-control" id="logo" name="logo" accept="image/*">
+                            <input type="file" class="form-control" id="logo" name="logo" accept=".jpg, .png, .jpeg">
                             <div class="form-text">Max. velikost 2MB (JPG, PNG)</div>
                         </div>
 
