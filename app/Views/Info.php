@@ -26,10 +26,15 @@
                         <h5 class="card-title"><?= esc($zavod->real_name) ?></h5>
                         <span class="fi fi-<?= esc($zavod->country) ?> "></span> <br>
                         <img src="<?=base_url("obrazky/logo/". $zavod->logo)?>" alt="" width="90px" height="auto" srcset="">
+                        <?php if($konec_zavodu == $zacatek_zavodu): ?>
+                            <p class="card-text"><strong>Datum:</strong> <?= esc($zacatek_zavodu ?? '=') ?></p>
+                        <?php else: ?>
+                        <!-- Zde můžete vložit kód, který se má zobrazit, když podmínka není splněna -->
+                        <p class="card-text"><strong>Začátek:</strong> <?= esc($zacatek_zavodu ?? '=') ?></p>
+                        <p class="card-text"><strong>Konec:</strong> <?= esc($konec_zavodu ?? '=') ?></p>
+                        <?php endif; ?>
                         <p class="card-text"><strong>Země:</strong> <?= esc($zavod->country ?? '-') ?></p>
                         <p class="card-text"><strong>Ročník:</strong> <?= esc($zavod->year ?? '-') ?></p>
-                        <p class="card-text"><strong>Začátek:</strong> <?= esc($zacatek_zavodu ?? '-') ?></p>
-                        <p class="card-text"><strong>Konec:</strong> <?= esc($konec_zavodu ?? '-') ?></p>
                         <p class="card-text"><strong>Druh UCI:</strong> <?= esc($zavod->name ?? '-') ?></p>
                         <p class="card-text"><strong>Počet etap:</strong> <?= esc($zavod->pocet ?? '-') ?></p>
                         <a href="<?= base_url("stages/".$zavod->id) ?>" class="btn btn-primary" target="">Etapy</a>
