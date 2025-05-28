@@ -1,1 +1,1 @@
-#Toto jsme dělali s kotym try tídni 😍
+# Toto jsme dělali s kotym try tídni 😍
