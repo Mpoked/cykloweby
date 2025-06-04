@@ -12,4 +12,9 @@ $routes->group('zavod', function($routes) {
     $routes->get('info/(:num)', 'Main::info/$1'); // Pro zobrazení info
     $routes->get('pridej_rocnik/(:num)', 'Main::pridej_rocnik_form/$1'); // Pro formulář
     $routes->post('pridej_rocnik', 'Main::pridej_rocnik'); // Pro zpracování formuláře
-});
+    // V routes.php přidejte:
+$routes->get('edit_rocnik/(:num)', 'Main::edit_rocnik/$1');
+$routes->post('uprav_rocnik/(:num)', 'Main::uprav_rocnik/$1');    
+}
+
+);

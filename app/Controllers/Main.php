@@ -141,4 +141,117 @@ public function pridej_rocnik()
     return redirect()->to('/zavod/info/' . $this->request->getPost('id_zavodu'))
         ->with('uspech', 'Ročník byl úspěšně přidán');
 }
+public function edit_rocnik($id_rocniku)
+{
+    $rocnik = $this->race_year->find($id_rocniku);
+    
+    if (!$rocnik) {
+        return redirect()->back()->with('error', 'Ročník nebyl nalezen');
+    }
+
+    $data = [
+        'rocnik' => $rocnik,
+        'kategorie' => $this->uci_tour_type->findAll(),
+        'id_zavodu' => $rocnik->id_race
+    ];
+    
+    return view('edit_rocnik', $data);
+}
+
+public function uprav_rocnik($id_rocniku)
+{
+    $rocnik = $this->race_year->find($id_rocniku);
+    
+    if (!$rocnik) {
+        return redirect()->back()->with('error', 'Ročník nebyl nalezen');
+    }
+
+    // Validace
+    $rules = [
+        'real_name' => 'required|max_length[255]',
+        'year' => 'required|numeric|min_length[4]|max_length[4]',
+        'start_date' => 'required|valid_date',
+        'end_date' => 'required|valid_date',
+        'country' => 'required|max_length[2]|alpha',
+        'uci_tour' => 'required|numeric',
+        'logo' => 'max_size[logo,2048]|is_image[logo]'
+    ];
+
+    if (!$this->validate($rules)) {
+        return redirect()->back()
+            ->withInput()
+            ->with('errors', $this->validator->getErrors());
+    }
+
+    // Kontrola datumu
+    if (strtotime($this->request->getPost('end_date')) < strtotime($this->request->getPost('start_date'))) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Datum konce musí být později než datum začátku');
+    }
+
+    // Příprava dat
+    $data = [
+        'real_name' => $this->request->getPost('real_name'),
+        'year' => $this->request->getPost('year'),
+        'start_date' => $this->request->getPost('start_date'),
+        'end_date' => $this->request->getPost('end_date'),
+        'country' => strtoupper($this->request->getPost('country')),
+        'uci_tour' => $this->request->getPost('uci_tour')
+    ];
+
+    // Zpracování obrázku
+    $logo = $this->request->getFile('logo');
+    $smazatLogo = $this->request->getPost('smazat_logo');
+
+    if ($smazatLogo && $rocnik->logo) {
+        // Smazat staré logo
+        $cesta = ROOTPATH . 'obrazky/logo/' . $rocnik->logo;
+        if (file_exists($cesta)) {
+            unlink($cesta);
+        }
+        $data['logo'] = null;
+    } elseif ($logo && $logo->isValid() && !$logo->hasMoved()) {
+        // Nahrát nové logo
+        $noveJmeno = $logo->getRandomName();
+        $logo->move(ROOTPATH . 'obrazky/logo', $noveJmeno);
+
+        // Smazat staré logo, pokud existuje
+        if ($rocnik->logo) {
+            $staraCesta = ROOTPATH . 'obrazky/logo/' . $rocnik->logo;
+            if (file_exists($staraCesta)) {
+                unlink($staraCesta);
+            }
+        }
+
+        $data['logo'] = $noveJmeno;
+    }
+
+    try {
+        $this->race_year->update($id_rocniku, $data);
+    } catch (\Exception $e) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Chyba při ukládání: ' . $e->getMessage());
+    }
+
+    return redirect()->to('/zavod/info/' . $rocnik->id_race)
+        ->with('uspech', 'Ročník byl úspěšně upraven');
+}
+public function edit_rocnik_form($id_rocniku)
+{
+    $rocnik = $this->race_year->find($id_rocniku);
+    
+    if (!$rocnik) {
+        return redirect()->back()->with('error', 'Ročník nebyl nalezen');
+    }
+
+    $data = [
+        'rocnik' => $rocnik,
+        'kategorie' => $this->uci_tour_type->findAll(), // Získání kategorií
+        'id_zavodu' => $rocnik->id_race
+    ];
+    
+    return view('edit_rocnik', $data);
+}
 }
