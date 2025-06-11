@@ -55,9 +55,7 @@
                                         
                                         // Simple country code to name mapping
                                         $countryNames = [
-                                            'au' => 'Austrálie',
-                                            'nz' => 'Nový Zéland',
-                                            've' => 'Venezuela',
+                                            
                                             // Add more mappings as needed
                                         ];
                                         
